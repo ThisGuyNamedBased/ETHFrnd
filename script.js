@@ -1,84 +1,110 @@
-class EtherealWL {
+class Dashboard {
     constructor() {
+      this.executionCount = localStorage.getItem('executionCount') || 0;
       this.initTheme();
       this.initEventListeners();
-      this.initSound();
-      this.loadKeys();
+      this.initCharts();
+      this.initCounter();
     }
   
-    // ===== Theme Management =====
     initTheme() {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
     }
   
     toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
-      this.showToast(`Switched to ${newTheme} mode`, 'success');
-      this.playSound('notification');
     }
   
-    // ===== Sound Management =====
-    initSound() {
-      this.sounds = {
-        notification: new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'),
-        action: new Audio('https://assets.mixkit.co/active_storage/sfx/2211/2211-preview.mp3')
-      };
+    initEventListeners() {
+      document.getElementById('toggleMode').addEventListener('click', () => this.toggleTheme());
+      
+      // Tab functionality
+      document.querySelectorAll('[data-timeframe]').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          document.querySelectorAll('[data-timeframe]').forEach(t => t.classList.remove('active'));
+          e.target.classList.add('active');
+          this.updateChart(e.target.dataset.timeframe);
+        });
+      });
     }
   
-    playSound(type) {
-      if (this.sounds[type]) {
-        this.sounds[type].currentTime = 0;
-        this.sounds[type].play().catch(() => {});
+    initCounter() {
+      if(document.getElementById('executionCounter')) {
+        this.executionCount = parseInt(localStorage.getItem('executionCount')) || 0;
+        this.animateCounter('executionCounter', this.executionCount);
       }
     }
   
-    // ===== Toast System =====
-    showToast(message, type = 'info') {
-      const toastContainer = document.querySelector('.toast-container');
-      const toastTemplate = document.createElement('div');
-      const icons = {
-        success: 'fa-circle-check',
-        error: 'fa-circle-xmark',
-        warning: 'fa-triangle-exclamation',
-        info: 'fa-circle-info'
-      };
+    animateCounter(target, duration = 2000) {
+      const element = document.getElementById(target);
+      let start = 0;
+      const increment = this.executionCount / (duration / 10);
   
-      toastTemplate.className = `toast fade-in ${type}`;
-      toastTemplate.innerHTML = `
-        <div class="toast-body">
-          <i class="fas ${icons[type]} toast-icon text-${type}"></i>
-          <div>
-            <p class="mb-0">${message}</p>
-          </div>
-          <div class="toast-progress"></div>
-        </div>
-      `;
-  
-      toastContainer.appendChild(toastTemplate);
-      setTimeout(() => toastTemplate.remove(), 3000);
-      this.playSound('notification');
+      const timer = setInterval(() => {
+        start += increment;
+        element.textContent = Math.floor(start);
+        if (start >= this.executionCount) {
+          element.textContent = this.executionCount;
+          clearInterval(timer);
+        }
+      }, 10);
     }
   
-    // ===== Whitelist Management =====
-    loadKeys() {
-      // Implementation for loading keys from storage
+    initCharts() {
+      if(document.getElementById('metricsChart')) {
+        this.chart = new Chart(document.getElementById('metricsChart').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: this.generateLabels(30),
+            datasets: [{
+              label: 'Executions',
+              data: this.generateData(30),
+              borderColor: '#7C3AED',
+              tension: 0.4,
+              fill: true,
+              backgroundColor: this.createGradient(),
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+          }
+        });
+      }
     }
   
-    // ===== Event Listeners =====
-    initEventListeners() {
-      // Theme Toggle
-      document.getElementById('toggleMode').addEventListener('click', () => this.toggleTheme());
-      
-      // Example Button
-      document.querySelectorAll('.btn-action').forEach(btn => {
-        btn.addEventListener('click', () => this.playSound('action'));
-      });
+    updateChart(days) {
+      this.chart.data.labels = this.generateLabels(days);
+      this.chart.data.datasets[0].data = this.generateData(days);
+      this.chart.update();
+    }
+  
+    generateLabels(days) {
+      return Array.from({length: days}, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        return date.toLocaleDateString();
+      }).reverse();
+    }
+  
+    generateData(days) {
+      return Array.from({length: days}, () => Math.floor(Math.random() * 100));
+    }
+  
+    createGradient() {
+      const ctx = document.getElementById('metricsChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, 'rgba(124, 58, 237, 0.2)');
+      gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
+      return gradient;
     }
   }
   
-  // Initialize Application
-  window.app = new EtherealWL();
+  // Initialize
+  const dashboard = new Dashboard();
+  document.querySelector('.fa-gem').classList.add('glow');
