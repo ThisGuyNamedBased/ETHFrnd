@@ -9,25 +9,24 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow fixed-top">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-key header-icon animate__animated animate__pulse animate__infinite"></i>
-        Advanced Whitelist
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-key header-icon"></i> Advanced Whitelist
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navContent">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item me-3">
-            <button id="toggleMode" class="btn btn-sm btn-outline-light">
-              <i class="fas fa-adjust"></i>
-            </button>
-          </li>
           <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link active" href="logs.html">Action Logs</a></li>
           <li class="nav-item"><a class="nav-link" href="metrics.html">Metrics</a></li>
+          <li class="nav-item">
+            <button id="toggleMode" class="btn btn-sm btn-outline-light ms-2">
+              <i class="fas fa-adjust"></i>
+            </button>
+          </li>
         </ul>
       </div>
     </div>
@@ -35,9 +34,9 @@
 
   <div class="container content mt-5">
     <div class="card shadow animate__animated animate__fadeInUp">
-      <div class="card-header bg-secondary text-white d-flex align-items-center">
+      <div class="card-header d-flex align-items-center">
         <i class="fas fa-stream me-2"></i>
-        Action Logs
+        <h5 class="mb-0">Action Logs</h5>
       </div>
       <div class="card-body log-container" id="logContainer">
         <p class="log-entry">Dashboard loaded.</p>
