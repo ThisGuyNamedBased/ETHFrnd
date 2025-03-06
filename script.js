@@ -12,30 +12,70 @@ const logAction = (message) => {
   logContainer.prepend(entry);
   updateExecCount();
 };
+const showToast = (message, type = 'success') => {
+  const toastEl = document.getElementById('liveToast');
+  const toastMsg = document.getElementById('toastMessage');
+  toastMsg.textContent = message;
+  toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
+  const toast = new bootstrap.Toast(toastEl);
+  toast.show();
+};
+
 document.getElementById('banSelectedBtn').addEventListener('click', () => {
   const checkboxes = document.querySelectorAll('.key-checkbox');
   const selectedKeys = [];
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) selectedKeys.push(checkbox.value);
+  checkboxes.forEach((cb) => {
+    if (cb.checked) selectedKeys.push(cb.value);
   });
   if (selectedKeys.length === 0) {
     logAction('No keys selected for ban.');
+    showToast('No keys selected.', 'warning');
   } else {
     logAction('Banning keys: ' + selectedKeys.join(', '));
+    showToast('Banned selected keys.', 'success');
   }
 });
+
 document.getElementById('bulkGenBtn').addEventListener('click', () => {
-  var bulkGenModal = new bootstrap.Modal(document.getElementById('bulkGenModal'));
-  bulkGenModal.show();
+  new bootstrap.Modal(document.getElementById('bulkGenModal')).show();
 });
-document.getElementById('bulkGenForm').addEventListener('submit', function(e) {
+
+document.getElementById('bulkGenForm').addEventListener('submit', function (e) {
   e.preventDefault();
   const numKeys = document.getElementById('numKeys').value;
   if (numKeys && numKeys > 0) {
     logAction('Bulk generating ' + numKeys + ' keys.');
+    showToast(`Generating ${numKeys} keys.`, 'success');
   } else {
-    logAction('Invalid number of keys entered for generation.');
+    logAction('Invalid number entered for bulk generation.');
+    showToast('Enter a valid number.', 'warning');
   }
-  var bulkGenModal = bootstrap.Modal.getInstance(document.getElementById('bulkGenModal'));
-  bulkGenModal.hide();
+  bootstrap.Modal.getInstance(document.getElementById('bulkGenModal')).hide();
+});
+
+// Select All Checkbox functionality
+document.getElementById('selectAll').addEventListener('change', function () {
+  const checkboxes = document.querySelectorAll('.key-checkbox');
+  checkboxes.forEach((cb) => {
+    cb.checked = this.checked;
+  });
+});
+
+// Search/Filter functionality
+document.getElementById('searchInput').addEventListener('input', function () {
+  const filter = this.value.toLowerCase();
+  const rows = document.querySelectorAll('#whitelistTableBody tr');
+  rows.forEach((row) => {
+    const keyText = row.cells[1].textContent.toLowerCase();
+    const hwidText = row.cells[2].textContent.toLowerCase();
+    row.style.display = keyText.includes(filter) || hwidText.includes(filter) ? '' : 'none';
+  });
+});
+
+// Dark/Light Mode Toggle
+document.getElementById('toggleMode').addEventListener('click', function () {
+  document.body.classList.toggle('light-mode');
+  const mode = document.body.classList.contains('light-mode') ? 'Light Mode' : 'Dark Mode';
+  logAction(`Switched to ${mode}.`);
+  showToast(`Switched to ${mode}.`, 'info');
 });
