@@ -6,25 +6,39 @@
   <title>Ethereal WL - Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <i class="fas fa-gem header-icon"></i> Ethereal WL
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <i class="fas fa-diamond me-2 shimmer"></i>
+        <span class="gradient-text">Ethereal WL</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navContent">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="index.html">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="logs.html">Action Logs</a></li>
-          <li class="nav-item"><a class="nav-link" href="metrics.html">Metrics</a></li>
+        <ul class="navbar-nav ms-auto gap-2">
           <li class="nav-item">
-            <button id="toggleMode" class="btn btn-sm btn-outline-light ms-2">
-              <i class="fas fa-adjust"></i>
+            <a class="nav-link active d-flex align-items-center" href="index.html">
+              <i class="fas fa-table-columns me-2"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" href="logs.html">
+              <i class="fas fa-scroll me-2"></i>Logs
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" href="metrics.html">
+              <i class="fas fa-chart-pie me-2"></i>Metrics
+            </a>
+          </li>
+          <li class="nav-item">
+            <button id="toggleMode" class="btn btn-outline-light btn-icon">
+              <i class="fas fa-moon"></i>
             </button>
           </li>
         </ul>
@@ -32,104 +46,111 @@
     </div>
   </nav>
 
-  <div class="container content mt-5">
-    <div class="card shadow animate__animated animate__fadeInUp">
+  <div class="container-fluid px-4 content">
+    <div class="card glass-card animate__animated animate__fadeIn">
       <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <h5 class="mb-2 mb-md-0">Whitelist Entries</h5>
-        <div class="d-flex align-items-center">
-          <input type="text" id="searchInput" class="form-control form-control-sm me-2" placeholder="Search..." />
-          <div class="form-check me-2">
-            <input class="form-check-input custom-checkbox" type="checkbox" id="selectAll" />
-            <label class="form-check-label" for="selectAll">All</label>
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+          <i class="fas fa-key me-3"></i>
+          <h3 class="mb-0">Whitelist Management</h3>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="form-control form-control-sm search-input" placeholder="Search keys or HWIDs..." />
           </div>
-          <button class="btn btn-sm btn-danger me-2" id="banSelectedBtn">
-            <i class="fas fa-ban"></i> Ban Selected
-          </button>
-          <button class="btn btn-sm btn-success" id="bulkGenBtn">
-            <i class="fas fa-plus-circle"></i> Bulk Generate
-          </button>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-danger btn-action" id="banSelectedBtn">
+              <i class="fas fa-user-slash me-2"></i>Ban Selected
+            </button>
+            <button class="btn btn-success btn-action" id="bulkGenBtn">
+              <i class="fas fa-layer-group me-2"></i>Bulk Generate
+            </button>
+          </div>
         </div>
       </div>
       <div class="card-body p-0">
-        <table class="table table-dark table-hover m-0 align-middle">
-          <thead>
-            <tr>
-              <th style="width: 5%;"></th>
-              <th>Key</th>
-              <th>HWID</th>
-              <th style="width: 10%;">Edit</th>
-            </tr>
-          </thead>
-          <tbody id="whitelistTableBody">
-            <tr>
-              <td>
-                <input type="checkbox" class="key-checkbox custom-checkbox" value="ABC123-XYZ789" />
-              </td>
-              <td>ABC123-XYZ789</td>
-              <td>HWID001</td>
-              <td>
-                <button class="btn btn-sm btn-outline-info edit-btn" data-key="ABC123-XYZ789">
-                  <i class="fas fa-edit"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input type="checkbox" class="key-checkbox custom-checkbox" value="DEF456-UVW123" />
-              </td>
-              <td>DEF456-UVW123</td>
-              <td>HWID002</td>
-              <td>
-                <button class="btn btn-sm btn-outline-info edit-btn" data-key="DEF456-UVW123">
-                  <i class="fas fa-edit"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input type="checkbox" class="key-checkbox custom-checkbox" value="GHI789-RST456" />
-              </td>
-              <td>GHI789-RST456</td>
-              <td>HWID003</td>
-              <td>
-                <button class="btn btn-sm btn-outline-info edit-btn" data-key="GHI789-RST456">
-                  <i class="fas fa-edit"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="sticky-header">
+              <tr>
+                <th style="width: 5%;">
+                  <input type="checkbox" id="selectAll" class="form-check-input" />
+                </th>
+                <th>License Key</th>
+                <th>HWID</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th style="width: 10%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="whitelistTableBody">
+              <!-- Dynamic content -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <div class="text-muted small">Showing <span id="visibleCount">0</span> of <span id="totalCount">0</span> entries</div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary" id="refreshBtn">
+            <i class="fas fa-arrows-rotate"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Modals and Toast -->
   <!-- Bulk Generation Modal -->
-  <div class="modal fade" id="bulkGenModal" tabindex="-1" aria-labelledby="bulkGenModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content bg-dark text-white">
+  <div class="modal fade" id="bulkGenModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-modal">
         <div class="modal-header">
-          <h5 class="modal-title" id="bulkGenModalLabel">Bulk Key Generation</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <h5 class="modal-title"><i class="fas fa-magic me-2"></i>Generate Keys</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <form id="bulkGenForm">
-            <div class="mb-3">
-              <label for="numKeys" class="form-label">Number of Keys</label>
-              <input type="number" class="form-control bg-secondary text-white" id="numKeys" placeholder="Enter number" />
+          <form id="bulkGenForm" class="d-flex flex-column gap-3">
+            <div class="form-group">
+              <label class="form-label">Number of Keys</label>
+              <input type="number" id="numKeys" class="form-control" min="1" max="100" required />
             </div>
-            <button type="submit" class="btn btn-success">Generate</button>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-sparkles me-2"></i>Generate
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Custom Toast Notification -->
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast align-items-center border-0" role="alert">
-      <div class="d-flex">
-        <div class="toast-body" id="toastMessage"></div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+  <!-- Edit Key Modal -->
+  <div class="modal fade" id="editKeyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-modal">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Edit Key</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editKeyForm" class="d-flex flex-column gap-3">
+            <div class="form-group">
+              <label class="form-label">License Key</label>
+              <input type="text" id="editKeyValue" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+              <label class="form-label">HWID</label>
+              <input type="text" id="editHwid" class="form-control" />
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
