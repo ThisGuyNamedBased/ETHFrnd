@@ -1,19 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+* {
+  box-sizing: border-box;
+}
 body {
-    background: #1e1e2f;
-    color: #e0e0e0;
-    padding-top: 70px;
-  }
-  .navbar-brand .header-icon {
-    font-size: 2rem;
-    color: #ffc107;
-  }
-  .card {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  }
-  .table thead th {
-    border-bottom: 2px solid #555;
-  }
-  .btn-action {
-    margin-right: 10px;
-  }
-  
+  background: #121212;
+  font-family: 'Roboto', sans-serif;
+  color: #e0e0e0;
+  padding-top: 70px;
+}
+.navbar-brand .header-icon {
+  font-size: 1.8rem;
+  color: #ffc107;
+}
+.content {
+  margin-top: 20px;
+}
+.card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.table th, .table td {
+  vertical-align: middle;
+}
+.log-container {
+  max-height: 250px;
+  overflow-y: auto;
+  background: #1f1f1f;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+.log-entry {
+  border-bottom: 1px solid #333;
+  padding: 4px 0;
+  margin: 0;
+}
+.log-entry:last-child {
+  border-bottom: none;
+}
+.btn-action {
+  margin-right: 5px;
+}
