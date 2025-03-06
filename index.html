@@ -10,13 +10,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow-sm">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold" href="#">
         <i class="fas fa-key header-icon animate__animated animate__pulse animate__infinite"></i>
         Whitelist Dashboard
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -30,34 +31,34 @@
   </nav>
   <div class="container my-5">
     <div class="mb-4 text-center">
-      <button class="btn btn-danger btn-action" id="banKeyBtn">
-        <i class="fas fa-ban"></i> Ban Key
-      </button>
-      <button class="btn btn-warning btn-action" id="banHWIDBtn">
-        <i class="fas fa-ban"></i> Ban HWID
+      <button class="btn btn-danger btn-action" id="banSelectedBtn">
+        <i class="fas fa-ban"></i> Ban Selected Keys
       </button>
       <button class="btn btn-success btn-action" id="bulkGenBtn">
         <i class="fas fa-plus-circle"></i> Generate Keys in Bulk
       </button>
     </div>
     <div class="card animate__animated animate__fadeInUp">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-secondary text-white">
         Whitelist Entries
       </div>
       <div class="card-body p-0">
-        <table class="table table-hover m-0">
-          <thead class="table-light">
+        <table class="table table-dark table-hover m-0">
+          <thead>
             <tr>
-              <th scope="col">Key</th>
-              <th scope="col">HWID</th>
+              <th style="width: 5%;"></th>
+              <th>Key</th>
+              <th>HWID</th>
             </tr>
           </thead>
           <tbody id="whitelistTableBody">
             <tr>
+              <td><input type="checkbox" class="key-checkbox" value="ABC123-XYZ789"></td>
               <td>ABC123-XYZ789</td>
               <td>HWID001</td>
             </tr>
             <tr>
+              <td><input type="checkbox" class="key-checkbox" value="DEF456-UVW123"></td>
               <td>DEF456-UVW123</td>
               <td>HWID002</td>
             </tr>
@@ -68,16 +69,16 @@
   </div>
   <div class="modal fade" id="bulkGenModal" tabindex="-1" aria-labelledby="bulkGenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div class="modal-content bg-dark text-white">
         <div class="modal-header">
           <h5 class="modal-title" id="bulkGenModalLabel">Generate Keys in Bulk</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form id="bulkGenForm">
             <div class="mb-3">
               <label for="numKeys" class="form-label">Number of Keys</label>
-              <input type="number" class="form-control" id="numKeys" placeholder="Enter number">
+              <input type="number" class="form-control bg-secondary text-white" id="numKeys" placeholder="Enter number">
             </div>
             <button type="submit" class="btn btn-success">Generate</button>
           </form>

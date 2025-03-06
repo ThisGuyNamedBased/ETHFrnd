@@ -1,19 +1,19 @@
 body {
-    background: linear-gradient(135deg, #74ABE2, #5563DE);
-    color: #333;
-    padding-top: 60px;
+    background: #1e1e2f;
+    color: #e0e0e0;
+    padding-top: 70px;
+  }
+  .navbar-brand .header-icon {
+    font-size: 2rem;
+    color: #ffc107;
   }
   .card {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
   }
   .table thead th {
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid #555;
   }
   .btn-action {
-    margin-right: 5px;
-  }
-  .header-icon {
-    font-size: 2rem;
-    color: #5563DE;
+    margin-right: 10px;
   }
   
