@@ -1,13 +1,18 @@
-// Metrics counters
-let bannedKeysCount = 0;
-let bulkGeneratedCount = 0;
+// Initialize metrics from localStorage (or set defaults)
+let bannedKeysCount = parseInt(localStorage.getItem('bannedKeysCount')) || 0;
+let bulkGeneratedCount = parseInt(localStorage.getItem('bulkGeneratedCount')) || 0;
 
-const updateMetrics = () => {
-  const bannedEl = document.getElementById('bannedCount');
-  const bulkGenEl = document.getElementById('bulkGenCount');
-  if(bannedEl) bannedEl.textContent = bannedKeysCount;
-  if(bulkGenEl) bulkGenEl.textContent = bulkGeneratedCount;
+const saveMetrics = () => {
+  localStorage.setItem('bannedKeysCount', bannedKeysCount);
+  localStorage.setItem('bulkGeneratedCount', bulkGeneratedCount);
 };
+
+const updateMetricsDisplay = () => {
+  document.querySelectorAll('#bannedCount').forEach(el => el.textContent = bannedKeysCount);
+  document.querySelectorAll('#bulkGenCount').forEach(el => el.textContent = bulkGeneratedCount);
+};
+
+updateMetricsDisplay();
 
 const logAction = (message) => {
   const logContainer = document.getElementById('logContainer');
@@ -23,8 +28,8 @@ const logAction = (message) => {
 const showToast = (message, type = 'success') => {
   const toastEl = document.getElementById('liveToast');
   const toastMsg = document.getElementById('toastMessage');
-  if(toastMsg) toastMsg.textContent = message;
-  if(toastEl) {
+  if (toastMsg) toastMsg.textContent = message;
+  if (toastEl) {
     toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
     new bootstrap.Toast(toastEl).show();
   }
@@ -34,12 +39,13 @@ document.getElementById('banSelectedBtn')?.addEventListener('click', () => {
   const selected = Array.from(document.querySelectorAll('.key-checkbox'))
     .filter(cb => cb.checked)
     .map(cb => cb.value);
-  if(selected.length === 0) {
+  if (selected.length === 0) {
     logAction('No keys selected for ban.');
     showToast('No keys selected.', 'warning');
   } else {
     bannedKeysCount += selected.length;
-    updateMetrics();
+    saveMetrics();
+    updateMetricsDisplay();
     logAction('Banned keys: ' + selected.join(', '));
     showToast('Banned selected keys.', 'success');
   }
@@ -52,9 +58,10 @@ document.getElementById('bulkGenBtn')?.addEventListener('click', () => {
 document.getElementById('bulkGenForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
   const num = parseInt(document.getElementById('numKeys').value);
-  if(num > 0) {
+  if (num > 0) {
     bulkGeneratedCount += num;
-    updateMetrics();
+    saveMetrics();
+    updateMetricsDisplay();
     logAction('Bulk generated ' + num + ' keys.');
     showToast(`Generated ${num} keys.`, 'success');
   } else {
@@ -65,9 +72,7 @@ document.getElementById('bulkGenForm')?.addEventListener('submit', function(e) {
 });
 
 document.getElementById('selectAll')?.addEventListener('change', function() {
-  document.querySelectorAll('.key-checkbox').forEach(cb => {
-    cb.checked = this.checked;
-  });
+  document.querySelectorAll('.key-checkbox').forEach(cb => cb.checked = this.checked);
 });
 
 document.getElementById('searchInput')?.addEventListener('input', function() {
@@ -79,6 +84,16 @@ document.getElementById('searchInput')?.addEventListener('input', function() {
   });
 });
 
+// Edit button functionality (placeholder)
+document.querySelectorAll('.edit-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const key = this.getAttribute('data-key');
+    logAction('Edit request for key: ' + key);
+    showToast('Edit functionality not implemented yet.', 'info');
+  });
+});
+
+// Dark/Light mode toggle
 document.querySelectorAll('#toggleMode').forEach(btn => {
   btn.addEventListener('click', function() {
     document.body.classList.toggle('light-mode');
@@ -86,4 +101,16 @@ document.querySelectorAll('#toggleMode').forEach(btn => {
     logAction(`Switched to ${mode}.`);
     showToast(`Switched to ${mode}.`, 'info');
   });
+});
+
+// Reset Metrics functionality on Metrics page
+document.getElementById('resetMetrics')?.addEventListener('click', function() {
+  if (confirm('Are you sure you want to reset metrics?')) {
+    bannedKeysCount = 0;
+    bulkGeneratedCount = 0;
+    saveMetrics();
+    updateMetricsDisplay();
+    logAction('Metrics reset.');
+    showToast('Metrics have been reset.', 'success');
+  }
 });
