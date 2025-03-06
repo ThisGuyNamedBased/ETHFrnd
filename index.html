@@ -9,170 +9,77 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Sound Elements -->
-  <audio id="notificationSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
-  <audio id="actionSound" src="https://assets.mixkit.co/active_storage/sfx/2211/2211-preview.mp3"></audio>
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
-    <div class="container-fluid px-4">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <i class="fas fa-gem me-2 glow"></i>
-        <span class="gradient-text">Ethereal WL</span>
+        <i class="fas fa-gem glow-icon me-2"></i>
+        Ethereal WL
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navContent">
-        <ul class="navbar-nav ms-auto gap-2">
-          <li class="nav-item">
-            <a class="nav-link active d-flex align-items-center" href="index.html">
-              <i class="fas fa-table-columns me-2"></i>Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" href="logs.html">
-              <i class="fas fa-scroll me-2"></i>Logs
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center" href="metrics.html">
-              <i class="fas fa-chart-pie me-2"></i>Metrics
-            </a>
-          </li>
-          <li class="nav-item">
-            <button id="toggleMode" class="btn btn-outline-light btn-icon">
-              <i class="fas fa-moon"></i>
-            </button>
-          </li>
-        </ul>
+      <div class="d-flex gap-3">
+        <button id="toggleMode" class="btn btn-outline-light">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
     </div>
   </nav>
 
-  <!-- Main Content -->
-  <div class="container-fluid px-4 content">
-    <div class="card glass-card shadow-lg">
-      <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <div class="d-flex align-items-center mb-3 mb-md-0">
-          <i class="fas fa-key me-3"></i>
-          <h3 class="mb-0">Whitelist Management</h3>
-        </div>
-        <div class="d-flex flex-wrap gap-2">
-          <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" class="form-control form-control-sm search-input" placeholder="Search keys or HWIDs...">
+  <div class="container mt-5 pt-4">
+    <div class="card shadow">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-key me-2"></i>Whitelist Keys</h5>
+        <div class="d-flex gap-2">
+          <div class="input-group input-group-sm" style="width: 200px;">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" class="form-control" placeholder="Search keys...">
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <div class="form-check me-2">
-              <input class="form-check-input custom-checkbox" type="checkbox" id="selectAll">
-              <label class="form-check-label" for="selectAll">All</label>
-            </div>
-            <button class="btn btn-danger btn-action" id="banSelectedBtn">
-              <i class="fas fa-user-slash me-2"></i>Ban Selected
-            </button>
-            <button class="btn btn-success btn-action" id="bulkGenBtn">
-              <i class="fas fa-layer-group me-2"></i>Bulk Generate
-            </button>
-          </div>
+          <button class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-2"></i>Add Key
+          </button>
         </div>
       </div>
+      
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table table-hover align-middle m-0">
-            <thead class="sticky-header">
+          <table class="table table-hover align-middle">
+            <thead>
               <tr>
                 <th style="width: 5%;"></th>
                 <th>License Key</th>
                 <th>HWID</th>
                 <th>Status</th>
                 <th>Created</th>
-                <th style="width: 10%;">Actions</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="whitelistTableBody">
+            <tbody>
               <tr>
-                <td>
-                  <input type="checkbox" class="form-check-input key-checkbox" value="ABC123-XYZ789">
-                </td>
-                <td>ABC123-XYZ789</td>
-                <td>HWID001</td>
-                <td><span class="badge bg-success">Active</span></td>
+                <td><input type="checkbox" class="form-check-input"></td>
+                <td><code>ABC-123-XYZ</code></td>
+                <td>HWID-001</td>
+                <td><span class="status-badge badge-success">Active</span></td>
                 <td>2024-03-15</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-primary edit-btn" data-key="ABC123-XYZ789">
+                  <button class="btn btn-sm btn-outline-primary">
                     <i class="fas fa-edit"></i>
                   </button>
                 </td>
               </tr>
               <tr>
-                <td>
-                  <input type="checkbox" class="form-check-input key-checkbox" value="DEF456-UVW123">
-                </td>
-                <td>DEF456-UVW123</td>
-                <td>HWID002</td>
-                <td><span class="badge bg-warning">Pending</span></td>
+                <td><input type="checkbox" class="form-check-input"></td>
+                <td><code>DEF-456-UVW</code></td>
+                <td>-</td>
+                <td><span class="status-badge badge-warning">Pending</span></td>
                 <td>2024-03-14</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-primary edit-btn" data-key="DEF456-UVW123">
-                    <i class="fas fa-edit"></i>
+                  <button class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-clock"></i>
                   </button>
                 </td>
               </tr>
-              <!-- Add more rows as needed -->
             </tbody>
           </table>
         </div>
       </div>
-      <div class="card-footer d-flex justify-content-between align-items-center">
-        <div class="text-muted small">Showing <span id="visibleCount">2</span> of <span id="totalCount">2</span> entries</div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-sm btn-outline-secondary" id="refreshBtn">
-            <i class="fas fa-arrows-rotate"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bulk Generation Modal -->
-  <div class="modal fade" id="bulkGenModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content glass-modal">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fas fa-magic me-2"></i>Bulk Key Generation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="bulkGenForm" class="d-flex flex-column gap-3">
-            <div class="form-group">
-              <label class="form-label">Number of Keys</label>
-              <input type="number" id="numKeys" class="form-control" min="1" max="100" required>
-            </div>
-            <div class="d-flex justify-content-end gap-2">
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-sparkles me-2"></i>Generate
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Notifications -->
-  <div class="toast-container position-fixed bottom-1rem end-1rem">
-    <div id="liveToast" class="toast fade-in" role="alert">
-      <div class="toast-content">
-        <div class="icon-container">
-          <i class="toast-icon"></i>
-        </div>
-        <div class="message-container">
-          <p class="toast-message"></p>
-        </div>
-        <button type="button" class="btn-close"></button>
-      </div>
-      <div class="progress-bar"></div>
     </div>
   </div>
 
