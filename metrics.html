@@ -9,25 +9,76 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <!-- Same navbar as index.html -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-gem me-2 glow"></i>
+        <span class="gradient-text">Ethereal WL</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav ms-auto gap-2">
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" href="index.html">
+              <i class="fas fa-table-columns me-2"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" href="logs.html">
+              <i class="fas fa-scroll me-2"></i>Logs
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active d-flex align-items-center gap-2" href="metrics.html">
+              <i class="fas fa-chart-pie me-2"></i>Metrics
+            </a>
+          </li>
+          <li class="nav-item">
+            <button id="toggleMode" class="btn btn-outline-light btn-icon">
+              <i class="fas fa-moon"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <div class="container mt-5 pt-4">
+  <div class="container mt-5 pt-4 main-content">
     <div class="row g-4">
+      <!-- New Users Metric -->
       <div class="col-12 col-md-6">
-        <div class="card shadow text-center">
+        <div class="card shadow text-center metric-card">
           <div class="card-body">
-            <h3 class="metric-number">1,428</h3>
+            <h3 class="metric-number" id="newUserCounter">0</h3>
+            <p class="text-muted mb-0">New Users (30d)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Executions Metric -->
+      <div class="col-12 col-md-6">
+        <div class="card shadow text-center metric-card">
+          <div class="card-body">
+            <h3 class="metric-number" id="executionCounter">0</h3>
             <p class="text-muted mb-0">Total Executions</p>
           </div>
         </div>
       </div>
-      
+
+      <!-- Chart Section -->
       <div class="col-12">
         <div class="card shadow">
           <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Usage Analytics</h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Usage Analytics</h5>
+              <div class="btn-group">
+                <button data-timeframe="30" class="btn btn-sm btn-outline-primary active">30d</button>
+                <button data-timeframe="90" class="btn btn-sm btn-outline-primary">90d</button>
+                <button data-timeframe="365" class="btn btn-sm btn-outline-primary">1y</button>
+              </div>
+            </div>
           </div>
           <div class="card-body">
             <div class="chart-container">
@@ -41,32 +92,89 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Chart initialization
-    const ctx = document.getElementById('usageChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: 'Monthly Executions',
-          data: [65, 59, 80, 81, 56, 55],
-          borderColor: '#7C3AED',
-          tension: 0.4,
-          fill: true,
-          backgroundColor: ctx.createLinearGradient(0, 0, 0, 400),
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'bottom' }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animate both counters
+      const animateCounter = (elementId, targetNumber) => {
+        const counterElement = document.getElementById(elementId);
+        let start = 0;
+        const duration = 2500;
+        const startTime = Date.now();
+
+        const updateCounter = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - (1 - progress) * (1 - progress); // Ease-out quad
+          
+          counterElement.textContent = Math.floor(targetNumber * eased).toLocaleString();
+          
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          } else {
+            counterElement.textContent = targetNumber.toLocaleString();
+          }
+        };
+
+        requestAnimationFrame(updateCounter);
+      };
+
+      // Initialize counters
+      animateCounter('executionCounter', 1428);
+      animateCounter('newUserCounter', 892);
+
+      // Chart initialization
+      const ctx = document.getElementById('usageChart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: generateLabels(30),
+          datasets: [{
+            label: 'Monthly Executions',
+            data: generateData(30),
+            borderColor: '#7C3AED',
+            tension: 0.4,
+            fill: true,
+            backgroundColor: createGradient(ctx),
+          }]
         },
-        scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: true }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
         }
+      });
+
+      // Helper functions
+      function generateLabels(days) {
+        return Array.from({length: days}, (_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          return date.toLocaleDateString();
+        }).reverse();
       }
+
+      function generateData(days) {
+        return Array.from({length: days}, () => Math.floor(Math.random() * 100));
+      }
+
+      function createGradient(ctx) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(124, 58, 237, 0.2)');
+        gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
+        return gradient;
+      }
+
+      // Timeframe controls
+      document.querySelectorAll('[data-timeframe]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('[data-timeframe]').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const days = parseInt(this.dataset.timeframe);
+          chart.data.labels = generateLabels(days);
+          chart.data.datasets[0].data = generateData(days);
+          chart.update();
+        });
+      });
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

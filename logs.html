@@ -9,16 +9,52 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <!-- Same navbar as index.html -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-gem me-2 glow"></i>
+        <span class="gradient-text">Ethereal WL</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav ms-auto gap-2" style="align-items: center;">
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" href="index.html">
+              <i class="fas fa-table-columns me-2"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active d-flex align-items-center gap-2" href="logs.html">
+              <i class="fas fa-scroll me-2"></i>Logs
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-2" href="metrics.html">
+              <i class="fas fa-chart-pie me-2"></i>Metrics
+            </a>
+          </li>
+          <li class="nav-item">
+            <button id="toggleMode" class="btn btn-outline-light btn-icon">
+              <i class="fas fa-moon"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <div class="container mt-5 pt-4">
+  <div class="container mt-5 pt-4 main-content">
     <div class="card shadow">
       <div class="card-header">
-        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Execution Logs</h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-history me-2"></i>Execution Logs</h5>
+          <div class="text-muted small" id="logCounter">Showing 15 entries</div>
+        </div>
       </div>
-      <div class="card-body">
+      <div class="card-body" id="logContainer">
+        <!-- Initial logs -->
         <div class="execution-log">
           <div class="log-timestamp">15:32:45</div>
           <div>
@@ -34,11 +70,87 @@
             Key <code class="log-key">DEF-456-UVW</code> blocked - Invalid HWID
           </div>
         </div>
+        <div class="execution-log">
+          <div class="log-timestamp">15:28:01</div>
+          <div>
+            <span class="status-badge badge-info me-2">WARNING</span>
+            Multiple login attempts from IP: 192.168.1.5
+          </div>
+        </div>
+        <div class="execution-log">
+          <div class="log-timestamp">15:25:33</div>
+          <div>
+            <span class="status-badge badge-expired me-2">EXPIRED</span>
+            Key <code class="log-key">GHI-789-RST</code> expired
+          </div>
+        </div>
+        <!-- Additional initial logs... (10-15 total) -->
+        <div id="logEnd"></div>
       </div>
     </div>
   </div>
 
+  <script>
+    // Initialize observer first
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting) {
+        // Simulate API call delay
+        setTimeout(() => {
+          const newLogs = Array.from({length: 5}, () => createLogEntry());
+          document.querySelector('#logContainer').insertAdjacentHTML('beforeend', newLogs.join(''));
+          updateLogCounter();
+        }, 800);
+      }
+    });
+
+    // Start observing
+    observer.observe(document.querySelector('#logEnd'));
+
+    let totalLogs = 15; // Initial count
+
+    function createLogEntry() {
+      const status = getRandomStatus();
+      return `
+        <div class="execution-log">
+          <div class="log-timestamp">${new Date().toLocaleTimeString()}</div>
+          <div>
+            <span class="status-badge ${status.class} me-2">${status.label}</span>
+            ${generateLogMessage(status)}
+          </div>
+        </div>`;
+    }
+
+    function getRandomStatus() {
+      const statuses = [
+        { class: 'badge-success', label: 'SUCCESS' },
+        { class: 'badge-error', label: 'FAILED' },
+        { class: 'badge-expired', label: 'EXPIRED' },
+        { class: 'badge-info', label: 'WARNING' }
+      ];
+      return statuses[Math.floor(Math.random() * statuses.length)];
+    }
+
+    function generateLogMessage(status) {
+      const messages = {
+        'SUCCESS': `Key <code class="log-key">${randomKey()}</code> used by user_${Math.floor(Math.random()*1000).toString().padStart(3, '0')} (IP: 192.168.1.${Math.floor(Math.random()*50)})`,
+        'FAILED': `Key <code class="log-key">${randomKey()}</code> blocked - ${['Invalid HWID', 'Geo-blocked', 'Revoked'][Math.floor(Math.random()*3)]}`,
+        'EXPIRED': `Key <code class="log-key">${randomKey()}</code> expired`,
+        'WARNING': `${['Multiple login attempts', 'Suspicious activity', 'Rate limit exceeded'][Math.floor(Math.random()*3)]} from IP: 192.168.1.${Math.floor(Math.random()*50)}`
+      };
+      return messages[status.label];
+    }
+
+    function randomKey() {
+      return Array.from({length: 3}, () => 
+        Math.random().toString(36).substr(2, 3).toUpperCase()
+      ).join('-');
+    }
+
+    function updateLogCounter() {
+      totalLogs += 5;
+      document.querySelector('#logCounter').textContent = `Showing ${totalLogs} entries`;
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>
