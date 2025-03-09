@@ -93,7 +93,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Animate both counters
       const animateCounter = (elementId, targetNumber) => {
         const counterElement = document.getElementById(elementId);
         let start = 0;
@@ -103,7 +102,7 @@
         const updateCounter = () => {
           const elapsed = Date.now() - startTime;
           const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - (1 - progress) * (1 - progress); // Ease-out quad
+          const eased = 1 - (1 - progress) * (1 - progress);
           
           counterElement.textContent = Math.floor(targetNumber * eased).toLocaleString();
           
@@ -117,11 +116,9 @@
         requestAnimationFrame(updateCounter);
       };
 
-      // Initialize counters
       animateCounter('executionCounter', 1428);
       animateCounter('newUserCounter', 892);
 
-      // Chart initialization
       const ctx = document.getElementById('usageChart').getContext('2d');
       const chart = new Chart(ctx, {
         type: 'line',
@@ -144,7 +141,6 @@
         }
       });
 
-      // Helper functions
       function generateLabels(days) {
         return Array.from({length: days}, (_, i) => {
           const date = new Date();
@@ -164,7 +160,6 @@
         return gradient;
       }
 
-      // Timeframe controls
       document.querySelectorAll('[data-timeframe]').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('[data-timeframe]').forEach(b => b.classList.remove('active'));

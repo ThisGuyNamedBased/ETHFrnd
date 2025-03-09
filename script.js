@@ -1,31 +1,24 @@
-// Define your backend URL hosted on Railway
 const BASE_URL = "https://ethereal-backend-production.up.railway.app";
 
 class Dashboard {
     constructor() {
-        // Optional: count executions (from first version)
         this.executionCount = localStorage.getItem('executionCount') || 0;
-        // Pagination defaults (from second version)
         this.currentPage = 1;
         this.itemsPerPage = 10;
-        // Store keys fetched from backend
         this.keys = [];
         
-        // Initialize everything
         this.initTheme();
         this.initEventListeners();
-        this.initCharts();          // if charts element exists
-        this.initCounter();         // if counter element exists
+        this.initCharts();
+        this.initCounter();
         this.initEditHandlers();
         this.initCheckboxHandlers();
         this.initSearch();
-        this.initBulkGeneration();  // Updated bulk key generate functionality
+        this.initBulkGeneration();
         this.initPageTransitions();
         
-        // Load keys from backend and update table
         this.loadKeys();
         
-        // Fix button icons
         document.getElementById('banSelectedBtn').innerHTML = 
             '<i class="fas fa-user-slash me-2"></i>Ban Selected';
         document.getElementById('bulkGenBtn').innerHTML = 
@@ -45,11 +38,8 @@ class Dashboard {
     }
 
     initEventListeners() {
-        // Toggle theme event
         document.getElementById('toggleMode').addEventListener('click', () => this.toggleTheme());
-        // Ban selected keys event
         document.getElementById('banSelectedBtn').addEventListener('click', () => this.banSelected());
-        // Timeframe update event for charts
         document.querySelectorAll('[data-timeframe]').forEach(tab => {
             tab.addEventListener('click', (e) => {
                 document.querySelectorAll('[data-timeframe]').forEach(t => t.classList.remove('active'));
@@ -159,7 +149,6 @@ class Dashboard {
     }
 
     initEditHandlers() {
-        // Attach click handlers for edit buttons
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const btnElem = e.target.closest('.edit-btn');
@@ -169,13 +158,11 @@ class Dashboard {
                 const modal = new bootstrap.Modal(document.getElementById('editModal'));
                 document.getElementById('editKey').value = key;
                 document.getElementById('editHwid').value = hwid;
-                // Store the key ID in the saveEdit button dataset
                 document.getElementById('saveEdit').dataset.id = btnElem.getAttribute('data-id');
                 modal.show();
             });
         });
 
-        // Save changes for edit modal and update backend
         document.getElementById('saveEdit').addEventListener('click', async (e) => {
             const newKey = document.getElementById('editKey').value;
             const newHwid = document.getElementById('editHwid').value;
@@ -240,13 +227,11 @@ class Dashboard {
     }
 
     initBulkGeneration() {
-        // Open the bulk generation modal when clicking the Bulk Generate button
         document.getElementById('bulkGenBtn').addEventListener('click', () => {
             const bulkModal = new bootstrap.Modal(document.getElementById('bulkGenModal'));
             bulkModal.show();
         });
         
-        // Handle bulk key generation form submission and send keys to the backend
         document.getElementById('bulkGenForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const count = parseInt(document.getElementById('numKeys').value);
@@ -280,8 +265,6 @@ class Dashboard {
         ).join('').match(/.{3}/g).join('-');
     }
 
-    // Removed simulateStatusChange so that no fake HWID is added.
-    // The HWID will be the value returned from the backend (or "Not Assigned" if still null).
 
     initPagination() {
         document.querySelector('.page-next').addEventListener('click', () => {
@@ -304,7 +287,6 @@ class Dashboard {
     }
 
     updateTable() {
-        // Populate the whitelist table from keys loaded from the backend
         const tableBody = document.getElementById('whitelistTableBody');
         tableBody.innerHTML = "";
         this.keys.forEach(key => {

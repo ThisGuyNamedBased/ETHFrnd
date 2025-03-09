@@ -91,10 +91,8 @@
   </div>
 
   <script>
-    // Initialize observer first
     const observer = new IntersectionObserver((entries) => {
       if(entries[0].isIntersecting) {
-        // Simulate API call delay
         setTimeout(() => {
           const newLogs = Array.from({length: 5}, () => createLogEntry());
           document.querySelector('#logContainer').insertAdjacentHTML('beforeend', newLogs.join(''));
@@ -103,10 +101,9 @@
       }
     });
 
-    // Start observing
     observer.observe(document.querySelector('#logEnd'));
 
-    let totalLogs = 15; // Initial count
+    let totalLogs = 15;
 
     function createLogEntry() {
       const status = getRandomStatus();
